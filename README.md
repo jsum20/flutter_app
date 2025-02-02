@@ -14,4 +14,28 @@ Before running the project, make sure you have the following installed on your m
 
 Xcode is not necessary for this project as only the Android version has been implemented.
 
+## Getting Started
+
+1. **Clone the repository**
+
+```bash
+  git clone https://github.com/jsum20/flutter_test.git
+  cd flutter_test
+```
+
+2. **Install Dependencies**
+
+```bash
+  flutter pub get
+```
+
+3. **Set up an emulator**
+You can create one via Android Studio or run a physical Android device.
+
+4. **Run the project**
+
+```bash
+  flutter run
+```
+
 
