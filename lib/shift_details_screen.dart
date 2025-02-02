@@ -57,6 +57,55 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
         permission == LocationPermission.always;
   }
 
+  bool _isClockInAllowed() {
+    final now = DateTime.now();
+    final shiftStart = DateFormat('HH:mm').parse(widget.shift.startTime);
+    final shiftStartTime = DateTime(
+        now.year, now.month, now.day, shiftStart.hour, shiftStart.minute);
+    final allowedStartTime = shiftStartTime.subtract(Duration(minutes: 15));
+
+    return now.isAfter(allowedStartTime) && now.isBefore(shiftStartTime);
+  }
+
+  bool _isClockOutAllowed() {
+    final now = DateTime.now();
+    final shiftEnd = DateFormat('HH:mm').parse(widget.shift.finishTime);
+    final shiftEndTime =
+    DateTime(now.year, now.month, now.day, shiftEnd.hour, shiftEnd.minute);
+
+    final allowedStartTime = shiftEndTime.subtract(Duration(minutes: 15));
+    final allowedEndTime = shiftEndTime.add(Duration(minutes: 15));
+
+    return now.isAfter(allowedStartTime) && now.isBefore(allowedEndTime);
+  }
+
+  void _showConfirmationMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Clock-In Error"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('d MMMM y').format(widget.shift.date);
@@ -113,13 +162,13 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
     return ElevatedButton(
       onPressed: isEnabled
           ? () {
-              if (_isClockInAllowed()) {
-                _showConfirmationMessage("Clocked In!");
-              } else {
-                _showErrorDialog(
-                    "Clock-in not allowed. You can clock in only 15 minutes before your shift.");
-              }
-            }
+        if (_isClockInAllowed()) {
+          _showConfirmationMessage("Clocked In!");
+        } else {
+          _showErrorDialog(
+              "Clock-in not allowed. You can clock in only 15 minutes before your shift.");
+        }
+      }
           : null,
       child: Text('Clock In'),
     );
@@ -131,64 +180,15 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
     return ElevatedButton(
       onPressed: isEnabled
           ? () {
-              if (_isClockOutAllowed()) {
-                _showConfirmationMessage("Clocked Out! Goodbye!");
-              } else {
-                _showErrorDialog(
-                    "Clock-out not allowed. You can clock out within 15 minutes of your shift's end time.");
-              }
-            }
+        if (_isClockOutAllowed()) {
+          _showConfirmationMessage("Clocked Out! Goodbye!");
+        } else {
+          _showErrorDialog(
+              "Clock-out not allowed. You can clock out within 15 minutes of your shift's end time.");
+        }
+      }
           : null, // Disabled when isEnabled is false
       child: Text('Clock Out'),
-    );
-  }
-
-  bool _isClockInAllowed() {
-    final now = DateTime.now();
-    final shiftStart = DateFormat('HH:mm').parse(widget.shift.startTime);
-    final shiftStartTime = DateTime(
-        now.year, now.month, now.day, shiftStart.hour, shiftStart.minute);
-    final allowedStartTime = shiftStartTime.subtract(Duration(minutes: 15));
-
-    return now.isAfter(allowedStartTime) && now.isBefore(shiftStartTime);
-  }
-
-  bool _isClockOutAllowed() {
-    final now = DateTime.now();
-    final shiftEnd = DateFormat('HH:mm').parse(widget.shift.finishTime);
-    final shiftEndTime =
-        DateTime(now.year, now.month, now.day, shiftEnd.hour, shiftEnd.minute);
-
-    final allowedStartTime = shiftEndTime.subtract(Duration(minutes: 15));
-    final allowedEndTime = shiftEndTime.add(Duration(minutes: 15));
-
-    return now.isAfter(allowedStartTime) && now.isBefore(allowedEndTime);
-  }
-
-  void _showConfirmationMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Clock-In Error"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
     );
   }
 }

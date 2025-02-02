@@ -40,6 +40,12 @@ class _ShiftCalendarScreenState extends State<ShiftCalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   List<Shift> _shifts = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadShifts();
+  }
+
   void _changeMonth(int months) {
     setState(() {
       DateTime newDate = DateTime(_focusedDay.year, _focusedDay.month + months, 1);
@@ -47,12 +53,6 @@ class _ShiftCalendarScreenState extends State<ShiftCalendarScreen> {
         _focusedDay = newDate;
       }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadShifts();
   }
 
   Future<void> _loadShifts() async {
@@ -99,7 +99,6 @@ class _ShiftCalendarScreenState extends State<ShiftCalendarScreen> {
               ],
             ),
           ),
-
           Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
               padding: EdgeInsets.all(8),
