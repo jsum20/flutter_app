@@ -1,6 +1,6 @@
-# hulee_task
+# Flutter App
 
-The objective of this task is to create a Flutter application that integrates with a provided API to manage and display user shifts.  
+The objective of this project is to create a Flutter application that integrates with a provided API to manage and display user shifts.  
 The application allows for a user to view their shifts in a monthly calendar and interact with individual shifts.  
 There is a Clock-in and Clock-out feature with required time and location validations.
 
